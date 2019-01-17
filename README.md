@@ -1,6 +1,8 @@
 # ballerina-websocket-spec-checker
 For checking spec compliancy of Ballerina WebSocket implementation
 
+(Find details on autobahn test suite here: https://github.com/crossbario/autobahn-testsuite)
+
 - Install `virtualenv`
 - Run autobahn test suite:
   ```
