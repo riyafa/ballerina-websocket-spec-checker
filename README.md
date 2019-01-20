@@ -1,4 +1,4 @@
-# ballerina-websocket-spec-checker
+# Spec checker for WebSocket implementaion in Ballerina
 For checking spec compliancy of Ballerina WebSocket implementation
 
 (Find details on autobahn test suite here: https://github.com/crossbario/autobahn-testsuite)
