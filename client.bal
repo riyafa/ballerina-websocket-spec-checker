@@ -17,9 +17,9 @@ service basic = @http:WebSocketServiceConfig {
 service {
     resource function onText(http:WebSocketClient caller, string text, boolean finalFrame) {
         if (currentCaseId == 0){
-            var val = int.convert(text);
+            var val = int.constructFrom(text);
             if (val is int){
-                caseCounts = untaint val;
+                caseCounts = <@untainted>val;
             }
             log:printInfo("case counts: " + text);
         } else {
@@ -27,7 +27,7 @@ service {
             
                 if (result is error) {
                     log:printError("Error sending text response", err = result);
-                    if (caller.isOpen){
+                    if (caller.isOpen()){
                         log:printInfo("In onText resource");
                         var err = caller->close(); if (err is error) 
                         {
@@ -45,7 +45,7 @@ service {
         var result = caller->pushBinary(b, finalFrame = finalFrame);
             if (result is error) {
                 log:printError("Error sending binary response", err = result);
-                if (caller.isOpen){
+                if (caller.isOpen()){
                     log:printInfo("In onBinary resource");
                     var err = caller->close(); 
                     if (err is error) { 
@@ -68,7 +68,7 @@ service {
     }
     resource function onIdleTimeout(http:WebSocketClient caller) {
         log:printInfo("onIdleTimout hit");
-        if (caller.isOpen){
+        if (caller.isOpen()){
             log:printInfo("In onIdleTimout resource");
             var err = caller->close();
             if (err is error) { 
@@ -82,8 +82,8 @@ service {
 function execute() {
     currentCaseId = currentCaseId + 1;
     if (currentCaseId <= caseCounts) {
-        log:printInfo("Executing test case " + currentCaseId + "/" + caseCounts);
-        openWebSocket(ws_uri + "/runCase?case=" + currentCaseId + "&agent=ballerinax");
+        log:printInfo("Executing test case " + currentCaseId.toString() + "/" + caseCounts.toString());
+        openWebSocket(ws_uri + "/runCase?case=" + currentCaseId.toString() + "&agent=ballerinax");
     } else if (currentCaseId == caseCounts + 1) {
         openWebSocket(ws_uri + "/updateReports?agent=ballerinax");
     }
